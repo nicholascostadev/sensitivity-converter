@@ -3,12 +3,14 @@ import {
   Button,
   Flex,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Input,
   Stack,
   Text,
   useColorMode,
   useColorModeValue,
+  useToast,
 } from '@chakra-ui/react'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -17,9 +19,21 @@ import { globalPaddingForContainer } from '../styles/global'
 import { useState } from 'react'
 
 const schema = z.object({
-  userDPI: z.number().min(1, 'DPI must be greater than 1'),
-  comparisonSens: z.number().positive('Sensitivity must be higher than 0'),
-  comparisonDPI: z.number().min(1, 'DPI must be greater than 1'),
+  userDPI: z
+    .number({
+      invalid_type_error: 'DPI must be a number',
+    })
+    .min(1, 'DPI must be greater than 1'),
+  comparisonSens: z
+    .number({
+      invalid_type_error: 'Sensitivity must be a number',
+    })
+    .positive('Sensitivity must be higher than 0'),
+  comparisonDPI: z
+    .number({
+      invalid_type_error: 'DPI must be a number',
+    })
+    .min(1, 'DPI must be greater than 1'),
 })
 
 type FormData = z.infer<typeof schema>
@@ -42,6 +56,20 @@ export function Home() {
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   })
+  const toast = useToast()
+
+  function limitResult(sensitivity: number) {
+    if (sensitivity > 10) {
+      toast({
+        title: `Sensitivity must be lower than 10(converted to 10 as your sensitivity was ${sensitivity})`,
+        status: 'error',
+        position: 'top-right',
+        isClosable: true,
+      })
+
+      return 10
+    } else return sensitivity
+  }
 
   function calculateResult({
     userDPI,
@@ -54,13 +82,17 @@ export function Home() {
     if (comparisonDPI > userDPI)
       setSensitivityResult({
         DPI: userDPI,
-        sensitivity: Number((differenceOfDPI * comparisonSens).toFixed(3)),
+        sensitivity: limitResult(
+          Number((differenceOfDPI * comparisonSens).toFixed(3)),
+        ),
         multiplier,
       })
     else
       setSensitivityResult({
         DPI: userDPI,
-        sensitivity: Number((differenceOfDPI / comparisonSens).toFixed(3)),
+        sensitivity: limitResult(
+          Number((differenceOfDPI / comparisonSens).toFixed(3)),
+        ),
         multiplier,
       })
   }
@@ -95,7 +127,15 @@ export function Home() {
           borderRadius={8}
           p="5"
         >
-          <FormControl as="form" onSubmit={handleSubmit(calculateResult)}>
+          <FormControl
+            as="form"
+            onSubmit={handleSubmit(calculateResult)}
+            isInvalid={
+              !!errors.comparisonDPI ||
+              !!errors.comparisonSens ||
+              !!errors.userDPI
+            }
+          >
             <Stack>
               <FormLabel>Your DPI:</FormLabel>
               <Input
@@ -106,9 +146,11 @@ export function Home() {
                 type="number"
                 placeholder="Your DPI goes here"
               />
-              {errors.userDPI && (
-                <Text color="tomato">{errors.userDPI.message}</Text>
-              )}
+              <FormErrorMessage>
+                {errors.userDPI && (
+                  <Text color="tomato">{errors.userDPI.message}</Text>
+                )}
+              </FormErrorMessage>
               <FormLabel>Comparison Sensitivity:</FormLabel>
               <Input
                 step="any"
@@ -118,9 +160,11 @@ export function Home() {
                 type="number"
                 placeholder="The other sensitivity goes here"
               />
-              {errors.comparisonSens && (
-                <Text color="tomato">{errors.comparisonSens.message}</Text>
-              )}
+              <FormErrorMessage>
+                {errors.comparisonSens && (
+                  <Text color="tomato">{errors.comparisonSens.message}</Text>
+                )}
+              </FormErrorMessage>
               <FormLabel>Comparison DPI:</FormLabel>
               <Input
                 step="any"
@@ -130,9 +174,11 @@ export function Home() {
                 type="number"
                 placeholder="The other DPI goes here"
               />
-              {errors.comparisonDPI && (
-                <Text color="tomato">{errors.comparisonDPI.message}</Text>
-              )}
+              <FormErrorMessage>
+                {errors.comparisonDPI && (
+                  <Text color="tomato">{errors.comparisonDPI.message}</Text>
+                )}
+              </FormErrorMessage>
             </Stack>
             <Button colorScheme="blue" type="submit" w="100%" mt="5" size="lg">
               <Text>Calculate</Text>
