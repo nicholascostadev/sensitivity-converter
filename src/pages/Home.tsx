@@ -83,17 +83,22 @@ export function Home() {
       <Summary />
 
       <Flex px={globalPaddingForContainer} pt="20">
-        <Stack
+        <Box
           bg={stackBg}
           boxShadow={colorMode === 'light' ? 'base' : 'none'}
           w="100%"
           borderRadius={8}
           p="5"
         >
-          <Box as="form" onSubmit={handleSubmit(handleCalculate)}>
+          <Stack
+            as="form"
+            onSubmit={handleSubmit(handleCalculate)}
+            spacing="1rem"
+          >
             <Input
               label="Your DPI"
               type="number"
+              placeholder="Your DPI goes here"
               error={errors.userDPI}
               defaultValue="800"
               {...register('userDPI', inputOptions)}
@@ -101,21 +106,23 @@ export function Home() {
             <Input
               label="Comparison Sensitivity"
               type="number"
+              placeholder="The sensitivity to compare goes here"
               error={errors.comparisonSens}
               {...register('comparisonSens', inputOptions)}
             />
             <Input
               label="Comparison DPI"
               type="number"
+              placeholder="The DPI to compare goes here"
               error={errors.comparisonDPI}
               {...register('comparisonDPI', inputOptions)}
             />
 
-            <Button colorScheme="blue" type="submit" w="100%" mt="5" size="lg">
+            <Button colorScheme="blue" type="submit" w="100%" size="lg">
               <Text>Calculate</Text>
             </Button>
-          </Box>
-        </Stack>
+          </Stack>
+        </Box>
       </Flex>
 
       {sensitivityResult && <Result {...sensitivityResult} />}
