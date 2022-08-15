@@ -93,6 +93,7 @@ export function Home() {
               label="Your DPI"
               type="number"
               error={errors.userDPI}
+              defaultValue="800"
               {...register('userDPI', inputOptions)}
             />
             <Input
