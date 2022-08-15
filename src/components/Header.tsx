@@ -1,4 +1,5 @@
-import { Flex, Heading, useColorMode } from '@chakra-ui/react'
+import { Button, Flex, Heading, HStack, useColorMode } from '@chakra-ui/react'
+import { GithubLogo } from 'phosphor-react'
 import { globalPaddingForContainer } from '../styles/global'
 import { ToggleThemeButton } from './ToggleThemeButton'
 
@@ -20,7 +21,20 @@ export function Header() {
           Your sensitivity readable
         </Heading>
       </Flex>
-      <ToggleThemeButton />
+      <HStack>
+        <Button
+          as="a"
+          href="https://github.com/nicholascostadev/sensitivity-converter"
+          target="_blank"
+          rel="noreferrer"
+          colorScheme="gray"
+          leftIcon={<GithubLogo />}
+        >
+          Source Code
+        </Button>
+
+        <ToggleThemeButton />
+      </HStack>
     </Flex>
   )
 }
