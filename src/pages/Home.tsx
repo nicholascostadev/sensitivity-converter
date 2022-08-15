@@ -6,6 +6,7 @@ import {
   Text,
   useColorMode,
   useColorModeValue,
+  useToast,
 } from '@chakra-ui/react'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -15,6 +16,7 @@ import { useState } from 'react'
 import { Summary } from '../components/Summary'
 import { Input } from '../components/Input'
 import { Result } from '../components/Result'
+import { calculateResult } from '../utils/calculateResult'
 
 const schema = z.object({
   userDPI: z
@@ -55,21 +57,21 @@ export function Home() {
     resolver: zodResolver(schema),
   })
 
-  function calculateResult({
-    userDPI,
-    comparisonSens,
-    comparisonDPI,
-  }: FormData) {
-    const differenceOfDPI = comparisonDPI / userDPI
-    const multiplier = Number(differenceOfDPI.toFixed(3))
-    console.log({ comparisonDPI, comparisonSens, userDPI, differenceOfDPI })
+  const toast = useToast()
 
-    setSensitivityResult({
-      DPI: userDPI,
-      sensitivity: Number((differenceOfDPI * comparisonSens).toFixed(3)),
-
-      multiplier,
-    })
+  function handleCalculate(data: FormData) {
+    try {
+      const result = calculateResult({ ...data })
+      setSensitivityResult(result)
+    } catch (error) {
+      toast({
+        title: 'Error.',
+        description: error as string,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
+    }
   }
 
   const inputOptions = {
@@ -88,7 +90,7 @@ export function Home() {
           borderRadius={8}
           p="5"
         >
-          <Box as="form" onSubmit={handleSubmit(calculateResult)}>
+          <Box as="form" onSubmit={handleSubmit(handleCalculate)}>
             <Input
               label="Your DPI"
               type="number"
