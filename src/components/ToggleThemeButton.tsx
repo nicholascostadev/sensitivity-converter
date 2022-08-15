@@ -1,19 +1,33 @@
-import { Button, useColorMode } from '@chakra-ui/react'
+import { Button, Tooltip, useColorMode } from '@chakra-ui/react'
 import { Moon, Sun } from 'phosphor-react'
 
 export function ToggleThemeButton() {
   const { colorMode, toggleColorMode } = useColorMode()
   if (colorMode === 'dark') {
     return (
-      <Button gap="2" onClick={toggleColorMode}>
-        <Sun />
-      </Button>
+      <Tooltip
+        hasArrow
+        borderRadius={8}
+        label="Toggle to Light Theme"
+        aria-label="Toggle To Light Theme"
+      >
+        <Button gap="2" onClick={toggleColorMode}>
+          <Sun />
+        </Button>
+      </Tooltip>
     )
   }
 
   return (
-    <Button gap="2" onClick={toggleColorMode}>
-      <Moon />
-    </Button>
+    <Tooltip
+      hasArrow
+      borderRadius={8}
+      label="Toggle to Dark Theme"
+      aria-label="Toggle To Dark Theme"
+    >
+      <Button gap="2" onClick={toggleColorMode}>
+        <Moon />
+      </Button>
+    </Tooltip>
   )
 }
