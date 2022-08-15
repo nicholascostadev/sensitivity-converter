@@ -1,13 +1,14 @@
-import { Flex, Link, Text } from '@chakra-ui/react'
+import { Flex, Link, Text, useColorMode } from '@chakra-ui/react'
 import { Copyright } from 'phosphor-react'
 import { globalPaddingForContainer } from '../../styles/global'
 
 export function Footer() {
+  const { colorMode } = useColorMode()
   return (
     <Flex
-      bg="gray.600"
-      p={['2', '5']}
       as="footer"
+      bg={colorMode === 'dark' ? 'gray.600' : 'gray.100'}
+      p={['2', '5']}
       mt="5"
       borderTopEndRadius={8}
       borderTopStartRadius={8}

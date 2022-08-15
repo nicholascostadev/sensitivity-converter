@@ -8,6 +8,7 @@ export function Header() {
 
   return (
     <Flex
+      boxShadow={colorMode === 'dark' ? 'initial' : 'sm'}
       as="header"
       w="100%"
       justify="space-between"
