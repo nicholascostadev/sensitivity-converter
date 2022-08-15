@@ -54,13 +54,13 @@ export function Home() {
     if (comparisonDPI > userDPI)
       setSensitivityResult({
         DPI: userDPI,
-        sensitivity: Number((differenceOfDPI / comparisonSens).toFixed(3)),
+        sensitivity: Number((differenceOfDPI * comparisonSens).toFixed(3)),
         multiplier,
       })
     else
       setSensitivityResult({
         DPI: userDPI,
-        sensitivity: Number((differenceOfDPI * comparisonSens).toFixed(3)),
+        sensitivity: Number((differenceOfDPI / comparisonSens).toFixed(3)),
         multiplier,
       })
   }
