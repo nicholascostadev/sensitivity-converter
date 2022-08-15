@@ -10,7 +10,6 @@ import {
   Text,
   useColorMode,
   useColorModeValue,
-  useToast,
 } from '@chakra-ui/react'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -56,20 +55,6 @@ export function Home() {
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   })
-  const toast = useToast()
-
-  function limitResult(sensitivity: number) {
-    if (sensitivity > 10) {
-      toast({
-        title: `Sensitivity must be lower than 10(converted to 10 as your sensitivity was ${sensitivity})`,
-        status: 'error',
-        position: 'top-right',
-        isClosable: true,
-      })
-
-      return 10
-    } else return sensitivity
-  }
 
   function calculateResult({
     userDPI,
@@ -82,17 +67,15 @@ export function Home() {
     if (comparisonDPI > userDPI)
       setSensitivityResult({
         DPI: userDPI,
-        sensitivity: limitResult(
-          Number((differenceOfDPI * comparisonSens).toFixed(3)),
-        ),
+        sensitivity: Number((differenceOfDPI * comparisonSens).toFixed(3)),
+
         multiplier,
       })
     else
       setSensitivityResult({
         DPI: userDPI,
-        sensitivity: limitResult(
-          Number((differenceOfDPI / comparisonSens).toFixed(3)),
-        ),
+        sensitivity: Number((differenceOfDPI / comparisonSens).toFixed(3)),
+
         multiplier,
       })
   }
