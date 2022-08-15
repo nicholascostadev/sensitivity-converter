@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { NotFound } from './components/NotFound'
 import { DefaultLayout } from './Layouts/DefaultLayout'
 import { Home } from './pages/Home'
 
@@ -8,8 +9,8 @@ export function Router() {
       <Routes>
         <Route path="/" element={<DefaultLayout />}>
           <Route path="/" element={<Home />} />
-          <Route path="/*" element={<div>Not found: 404</div>} />
         </Route>
+        <Route path="/*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   )

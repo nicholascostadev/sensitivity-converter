@@ -1,34 +1,78 @@
-import { Flex, Link, Text, useColorMode } from '@chakra-ui/react'
-import { Copyright } from 'phosphor-react'
-import { globalPaddingForContainer } from '../../styles/global'
+import {
+  Box,
+  chakra,
+  Container,
+  Stack,
+  Text,
+  useColorModeValue,
+  VisuallyHidden,
+} from '@chakra-ui/react'
+import { InstagramLogo, TwitterLogo } from 'phosphor-react'
+import { ReactNode } from 'react'
+
+const SocialButton = ({
+  children,
+  label,
+  href,
+}: {
+  children: ReactNode
+  label: string
+  href: string
+}) => {
+  return (
+    <chakra.button
+      bg={useColorModeValue('blackAlpha.100', 'whiteAlpha.100')}
+      rounded={'full'}
+      w={8}
+      h={8}
+      cursor={'pointer'}
+      as={'a'}
+      href={href}
+      display={'inline-flex'}
+      alignItems={'center'}
+      justifyContent={'center'}
+      transition={'background 0.3s ease'}
+      _hover={{
+        bg: useColorModeValue('blackAlpha.200', 'whiteAlpha.200'),
+      }}
+    >
+      <VisuallyHidden>{label}</VisuallyHidden>
+      {children}
+    </chakra.button>
+  )
+}
 
 export function Footer() {
-  const { colorMode } = useColorMode()
   return (
-    <Flex
-      as="footer"
-      bg={colorMode === 'dark' ? 'gray.600' : 'gray.100'}
-      p={['2', '5']}
-      mt="5"
-      borderTopEndRadius={8}
-      borderTopStartRadius={8}
-      flexDir="column"
-      align="center"
-      justify="center"
-      px={globalPaddingForContainer}
+    <Box
+      bg={useColorModeValue('gray.50', 'gray.900')}
+      color={useColorModeValue('gray.700', 'gray.200')}
     >
-      <Link
-        href="https://nicholascosta.dev"
-        target="_blank"
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        gap="1"
+      <Container
+        as={Stack}
+        maxW={'6xl'}
+        py={4}
+        direction={{ base: 'column', md: 'row' }}
+        spacing={4}
+        justify={{ base: 'center', md: 'space-between' }}
+        align={{ base: 'center', md: 'center' }}
       >
-        <Copyright />
-        nicholascostadev
-      </Link>
-      <Text>All rights reserved</Text>
-    </Flex>
+        <Text>© 2022 nicholascostadev. All rights reserved</Text>
+        <Stack direction={'row'} spacing={6}>
+          <SocialButton
+            label={'Twitter'}
+            href={'https://twitter.vom/NicholasCosta04'}
+          >
+            <TwitterLogo />
+          </SocialButton>
+          <SocialButton
+            label={'Instagram'}
+            href={'https://instagram.com/nicholas_m_costa'}
+          >
+            <InstagramLogo />
+          </SocialButton>
+        </Stack>
+      </Container>
+    </Box>
   )
 }
